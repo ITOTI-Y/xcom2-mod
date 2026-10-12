@@ -49,7 +49,13 @@ VISIBILITY_CODES: Final = {
 
 
 def vdf_string(value: str) -> str:
-    return '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
+    # SteamCMD reads a VDF string up to its next double quote and ignores
+    # escapes, so a quote would silently cut the field short.
+    if '"' in value:
+        raise typer.BadParameter(
+            f"double quotes cannot reach SteamCMD; use “ ” instead: {value[:60]!r}"
+        )
+    return f'"{value}"'
 
 
 def with_published_id(manifest: str, published_id: str) -> str:
