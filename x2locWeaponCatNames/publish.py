@@ -28,7 +28,7 @@ HERE: Final = Path(__file__).parent
 WORKSHOP: Final = HERE / "workshop"
 ID_FILE: Final = WORKSHOP / "publishedfileid"
 XCOM2_APP_ID: Final = "268500"
-TITLE: Final = "[WOTC] x2locWeaponCatNames"
+TITLE: Final = "[WOTC] x2loc Weapon Cat Names"
 # What the game loads, plus the source other mod authors may want to read.
 CONTENT: Final = ("Config", "Script", "Src", f"{MOD}.XComMod")
 
