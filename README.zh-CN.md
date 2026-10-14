@@ -7,6 +7,7 @@
 | Mod | 用途 |
 |---|---|
 | [x2locWeaponCatNames](x2locWeaponCatNames) | 把技能说明“可用武器”一行中 mod 武器类别的内部代号替换为本地化名称 |
+| [UniversalSoldierLW](UniversalSoldierLW) | 新兵从所有兵种的技能列中自选专精，并可用能力点提升属性 |
 
 ## x2locWeaponCatNames
 
@@ -20,6 +21,25 @@ uv run x2locWeaponCatNames/publish.py --steamcmd <steamcmd.exe> --username <Stea
 ```
 
 `build.py` 用天选者之战 SDK 编译该 mod，把编译好的脚本保存在 `Script/` 中，并安装到游戏。`publish.py` 用 [SteamCMD](https://developer.valvesoftware.com/wiki/SteamCMD) 把它上传到 Steam 创意工坊，简介取自 `workshop/description.bbcode`，预览图为 `ModPreview.jpg`。密码和 Steam 令牌验证码由 SteamCMD 直接询问。首次上传创建一个隐藏条目，并把条目 ID 记录在 `workshop/publishedfileid` 中；之后的上传更新同一条目。SteamCMD 无法设置标签和必需物品，二者需要在条目的创意工坊页面上设置。
+
+## UniversalSoldierLW
+
+凡是会从兵种池中分到兵种的士兵，第一次晋升时都改为通用士兵，WOTC_ChooseMyClass 的选兵种步骤也会被跳过。晋升界面第一次显示这样的士兵时，会先要求选择专精（默认 3 个），再选择 2 个起始技能。每个专精是另一个兵种的一列技能，士兵因此可以组合多个兵种的技能列，再照常用能力点购买其中的技能。界面右侧列出已选项，点击即可移除，并预览当前高亮项的全部技能。本 mod 为 Long War of the Chosen 编写，但没有写死任何兵种：兵种池中的所有兵种，包括兵种包新增的，都会提供自己的技能列。它需要天选者之战、[X2WOTCCommunityHighlander](https://steamcommunity.com/sharedfiles/filedetails/?id=1134256495)、[X2WOTCCommunityPromotionScreen](https://steamcommunity.com/sharedfiles/filedetails/?id=2550561145) 和 [Ability To Slot Reassignment](https://steamcommunity.com/sharedfiles/filedetails/?id=2133397762)，不能与 RPG Overhaul 同时启用。
+
+- 技能列：兵种的一列是每个军衔中同一位置的技能槽，不含随机的 XCOM 行和 LWOTC 的手枪行。第一个选择的专精为主专精：它的兵种提供各列共有的新兵级技能（例如专家的各项协议），所选各列之后也接该兵种的 XCOM 行和手枪行。
+- 武器：专精可以任意组合。通用士兵每个武器槽可装备的武器，是所选专精各兵种在该槽位允许的武器的并集。Ability To Slot Reassignment 登记过的技能会在任务中改挂到匹配的武器上，找不到就移除。其余技能中，挂在副武器上的兵种列技能，只有士兵携带其兵种在该槽位允许的武器类别时才会获得；主武器技能、起始技能、XCOM 行和手枪行的技能始终会获得。
+- 起始技能：技能池是各来源兵种随机牌组（即 XCOM 行）中的全部被动技能，可用 `ORIGIN_EXTRA_ABILITIES` 和 `ORIGIN_EXCLUDED_ABILITIES` 增减。所需武器不在所选专精兵种允许范围内的技能不会列出。选中的技能并入新兵级技能。
+- 技能冲突：来自不同列的两个技能，若同时出现在 `ABILITY_GROUPS` 的同一组中，或一个通过 `OverrideAbilities` 取代另一个且不是它的升级版，或两者显示名称相同，就归为同一族。学会其中一个后，其余的锁定；新兵级技能只授予同族中优先级最高的一个。
+- 属性训练：晋升界面上的按钮可用能力点购买 `STAT_UPGRADES` 中的属性提升，先扣士兵自己的能力点，不足部分从 XCOM 共享能力点中扣除。所有士兵都可使用。
+- 在训练中心重训会清除专精、起始技能和属性提升，并退还士兵自己的能力点。
+
+专精和起始技能的数量、排除的兵种和技能、技能组以及属性提升都在 `Config/XComUniversalSoldierLW.ini` 中设置。在进行中的战役里移除本 mod，会使通用士兵失去兵种。
+
+```bash
+uv run UniversalSoldierLW/build.py --sdk <WOTC SDK> --mods-dir <XComGame/Mods> --highlander <Highlander 创意工坊目录>
+```
+
+本 mod 重写了 Highlander 的钩子，所以 `build.py` 会先把 Highlander 的 `Core`、`Engine` 和 `XComGame` 源码覆盖到 SDK 的 `Development/Src`。它还要读取 Ability To Slot Reassignment 的配置类，而该 mod 的源码无法用当前 SDK 编译，所以先把 `BuildStubs/` 中声明一致的替身类编译进 SDK，替身类不随 mod 发布。随后像 x2locWeaponCatNames 一样编译并安装。
 
 ## 许可证
 
