@@ -1,0 +1,6 @@
+[mod]
+publishedFileId=0
+Title=Cheat UI
+Description=Opens a menu of console commands with a hotkey and runs the chosen one, asking for its parameters.
+tags= war of the chosen
+RequiresXPACK=true
