@@ -1,21 +1,33 @@
 //---------------------------------------------------------------------------------------
-//  Opens and closes the cheat menu on HOTKEY, before any screen sees the key.
+//  Opens and closes the command menu on HOTKEY, before any screen sees the key.
 //
 //  The Highlander's global input subscription must be removed before its callback's
 //  owner goes away, so this invisible panel lives on the HUD of the current layer and
-//  unsubscribes when it is removed or destroyed with the map.
+//  unsubscribes when it is removed or destroyed with the map. On the tactical HUD it
+//  also turns the recorded toggles back on, once the mission has finished loading.
 //---------------------------------------------------------------------------------------
-class UICheatUI_Hotkey extends UIPanel;
+class UICommandsUI_Hotkey extends UIPanel;
+
+const TOGGLE_DELAY = 3.0;
 
 var bool bSubscribed;
 
-simulated function UICheatUI_Hotkey InitHotkey()
+simulated function UICommandsUI_Hotkey InitHotkey()
 {
-	InitPanel('CheatUI_Hotkey');
+	InitPanel('CommandsUI_Hotkey');
 	Hide();
 	Movie.Pres.ScreenStack.SubscribeToOnInput(OnInput);
 	bSubscribed = true;
+	if (UITacticalHUD(Screen) != none)
+	{
+		SetTimer(TOGGLE_DELAY, false, nameof(ApplySavedToggles));
+	}
 	return self;
+}
+
+simulated function ApplySavedToggles()
+{
+	class'CommandsUI_Commands'.static.ApplySavedToggles();
 }
 
 simulated function bool OnInput(int iInput, int ActionMask)
@@ -23,7 +35,7 @@ simulated function bool OnInput(int iInput, int ActionMask)
 	local UIScreenStack Stack;
 	local UIScreen Menu;
 
-	if (iInput != class'CheatUI_Commands'.default.HOTKEY)
+	if (iInput != class'CommandsUI_Commands'.default.HOTKEY)
 	{
 		return false;
 	}
@@ -37,14 +49,14 @@ simulated function bool OnInput(int iInput, int ActionMask)
 	{
 		return true;
 	}
-	Menu = Stack.GetFirstInstanceOf(class'UICheatUI_Menu');
+	Menu = Stack.GetFirstInstanceOf(class'UICommandsUI_Menu');
 	if (Menu != none)
 	{
 		Menu.CloseScreen();
 	}
 	else
 	{
-		Stack.Push(Movie.Pres.Spawn(class'UICheatUI_Menu', Movie.Pres), Movie.Pres.Get2DMovie());
+		Stack.Push(Movie.Pres.Spawn(class'UICommandsUI_Menu', Movie.Pres), Movie.Pres.Get2DMovie());
 	}
 	return true;
 }

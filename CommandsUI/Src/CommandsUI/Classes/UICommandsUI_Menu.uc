@@ -1,10 +1,11 @@
 //---------------------------------------------------------------------------------------
-//  The cheat menu. It lists the commands of the current layer by category; choosing one
+//  The command menu. It lists the commands of the current layer by category; choosing one
 //  asks for its parameters in order, a dialog for numbers and text and a filterable
-//  list for everything else, then runs the command line and stays open. Everything sits
+//  list for everything else, then runs the command line and stays open. Toggle commands
+//  carry a read-only checkbox with their current state. Everything sits
 //  in one container anchored to the screen center, so wider screens keep it centered.
 //---------------------------------------------------------------------------------------
-class UICheatUI_Menu extends UIScreen dependson(CheatUI_Commands);
+class UICommandsUI_Menu extends UIScreen dependson(CommandsUI_Commands);
 
 const PANEL_WIDTH = 800;
 const PANEL_HEIGHT = 920;
@@ -16,9 +17,10 @@ var UIText Status;
 var UIList List;
 var UIButton FilterButton;
 var UIButton BackButton;
+var UIButton AdvancedButton;
 
 var array<int> RowCommands;				// command index per list row, INDEX_NONE for category rows
-var array<CheatUI_Option> RowOptions;	// option per list row while choosing a parameter
+var array<CommandsUI_Option> RowOptions;	// option per list row while choosing a parameter
 
 var bool bPicking;
 var int CommandIndex;
@@ -33,39 +35,45 @@ var localized string strFilter;
 var localized string strFilterTitle;
 var localized string strBack;
 var localized string strClose;
+var localized string strShowAll;		// shows the advanced commands too
+var localized string strShowCommon;		// back to the common commands
 
 simulated function InitScreen(XComPlayerController InitController, UIMovie InitMovie, optional name InitName)
 {
 	super.InitScreen(InitController, InitMovie, InitName);
 
 	Container = Spawn(class'UIPanel', self);
-	Container.InitPanel('CheatUI_Container');
+	Container.InitPanel('CommandsUI_Container');
 	Container.SetAnchor(class'UIUtilities'.const.ANCHOR_MIDDLE_CENTER);
 	Container.SetPosition(-PANEL_WIDTH / 2, -PANEL_HEIGHT / 2);
 
 	Background = Spawn(class'UIBGBox', Container);
-	Background.InitBG('CheatUI_Background', 0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+	Background.InitBG('CommandsUI_Background', 0, 0, PANEL_WIDTH, PANEL_HEIGHT);
 
 	Header = Spawn(class'UIX2PanelHeader', Container);
-	Header.InitPanelHeader('CheatUI_Header', strTitle, "");
+	Header.InitPanelHeader('CommandsUI_Header', strTitle, "");
 	Header.SetPosition(20, 15);
 	Header.SetHeaderWidth(PANEL_WIDTH - 40);
 
 	Status = Spawn(class'UIText', Container);
-	Status.InitText('CheatUI_Status', "");
+	Status.InitText('CommandsUI_Status', "");
 	Status.SetPosition(20, 80);
-	Status.SetSize(PANEL_WIDTH - 40, 60);
+	Status.SetSize(PANEL_WIDTH - 300, 60);
+
+	AdvancedButton = Spawn(class'UIButton', Container);
+	AdvancedButton.InitButton('CommandsUI_Advanced', "", OnAdvancedButton);
+	AdvancedButton.SetPosition(PANEL_WIDTH - 260, 85);
 
 	List = Spawn(class'UIList', Container);
-	List.InitList('CheatUI_List', 20, 145, PANEL_WIDTH - 60, PANEL_HEIGHT - 225);
+	List.InitList('CommandsUI_List', 20, 145, PANEL_WIDTH - 60, PANEL_HEIGHT - 225);
 	List.OnItemClicked = OnRowClicked;
 
 	FilterButton = Spawn(class'UIButton', Container);
-	FilterButton.InitButton('CheatUI_Filter', strFilter, OnFilterButton);
+	FilterButton.InitButton('CommandsUI_Filter', strFilter, OnFilterButton);
 	FilterButton.SetPosition(20, PANEL_HEIGHT - 60);
 
 	BackButton = Spawn(class'UIButton', Container);
-	BackButton.InitButton('CheatUI_Back', strClose, OnBackButton);
+	BackButton.InitButton('CommandsUI_Back', strClose, OnBackButton);
 	BackButton.SetPosition(PANEL_WIDTH - 220, PANEL_HEIGHT - 60);
 
 	SetStatus(class'Engine'.static.IsConsoleAllowed() ? "" : strNoConsole);
@@ -80,7 +88,8 @@ simulated function SetStatus(string Text)
 simulated function ShowCommands()
 {
 	local array<name> Categories;
-	local CheatUI_Command Command;
+	local CommandsUI_Command Command;
+	local UIListItemString Row;
 	local name Category;
 	local int i;
 
@@ -90,31 +99,37 @@ simulated function ShowCommands()
 	Header.SetText(strTitle, "");
 	FilterButton.Hide();
 	BackButton.SetText(strClose);
+	AdvancedButton.SetText(class'CommandsUI_Settings'.default.SHOW_ADVANCED ? strShowCommon : strShowAll);
+	AdvancedButton.Show();
 
-	foreach class'CheatUI_Commands'.default.MENU_COMMANDS(Command)
+	foreach class'CommandsUI_Commands'.default.MENU_COMMANDS(Command)
 	{
-		if (class'CheatUI_Commands'.static.IsAvailable(Command) && Categories.Find(Command.Category) == INDEX_NONE)
+		if (class'CommandsUI_Commands'.static.IsShown(Command) && Categories.Find(Command.Category) == INDEX_NONE)
 		{
 			Categories.AddItem(Command.Category);
 		}
 	}
 	foreach Categories(Category)
 	{
-		AddRow(class'UIUtilities_Text'.static.GetColoredText(class'CheatUI_Commands'.static.GetCategoryLabel(Category), eUIState_Header), true);
+		AddRow(class'UIUtilities_Text'.static.GetColoredText(class'CommandsUI_Commands'.static.GetCategoryLabel(Category), eUIState_Header), true);
 		RowCommands.AddItem(INDEX_NONE);
-		for (i = 0; i < class'CheatUI_Commands'.default.MENU_COMMANDS.Length; i++)
+		for (i = 0; i < class'CommandsUI_Commands'.default.MENU_COMMANDS.Length; i++)
 		{
-			Command = class'CheatUI_Commands'.default.MENU_COMMANDS[i];
-			if (Command.Category == Category && class'CheatUI_Commands'.static.IsAvailable(Command))
+			Command = class'CommandsUI_Commands'.default.MENU_COMMANDS[i];
+			if (Command.Category == Category && class'CommandsUI_Commands'.static.IsShown(Command))
 			{
-				AddRow("    " $ class'CheatUI_Commands'.static.GetLabel(Command), false);
+				Row = AddRow("    " $ class'CommandsUI_Commands'.static.GetLabel(Command), false);
+				if (Command.Toggle != '')
+				{
+					AddToggleBox(Row, class'CommandsUI_Commands'.static.GetToggleState(Command.Toggle));
+				}
 				RowCommands.AddItem(i);
 			}
 		}
 	}
 }
 
-simulated function AddRow(string Text, bool bDisabled)
+simulated function UIListItemString AddRow(string Text, bool bDisabled)
 {
 	local UIListItemString Row;
 
@@ -124,11 +139,28 @@ simulated function AddRow(string Text, bool bDisabled)
 	{
 		Row.SetDisabled(true);
 	}
+	return Row;
 }
 
-simulated function CheatUI_Command GetCommand()
+// Read-only, so a click reaches the row and runs the toggle command.
+simulated function AddToggleBox(UIListItemString Row, bool bChecked)
 {
-	return class'CheatUI_Commands'.default.MENU_COMMANDS[CommandIndex];
+	local UICheckbox Checkbox;
+
+	Checkbox = Spawn(class'UICheckbox', Row);
+	Checkbox.InitCheckbox('', "", bChecked, , true);
+	Checkbox.SetPosition(List.Width - 50, 0);
+}
+
+simulated function OnAdvancedButton(UIButton Button)
+{
+	class'CommandsUI_Settings'.static.SetShowAdvanced(!class'CommandsUI_Settings'.default.SHOW_ADVANCED);
+	ShowCommands();
+}
+
+simulated function CommandsUI_Command GetCommand()
+{
+	return class'CommandsUI_Commands'.default.MENU_COMMANDS[CommandIndex];
 }
 
 simulated function OnRowClicked(UIList ContainerList, int ItemIndex)
@@ -153,8 +185,8 @@ simulated function OnRowClicked(UIList ContainerList, int ItemIndex)
 
 simulated function NextParam()
 {
-	local CheatUI_Command Command;
-	local CheatUI_Param Param;
+	local CommandsUI_Command Command;
+	local CommandsUI_Param Param;
 
 	Command = GetCommand();
 	if (Args.Length >= Command.Params.Length)
@@ -163,35 +195,36 @@ simulated function NextParam()
 		return;
 	}
 	Param = Command.Params[Args.Length];
-	if (class'CheatUI_Commands'.static.IsListKind(Param.Kind))
+	if (class'CommandsUI_Commands'.static.IsListKind(Param.Kind))
 	{
 		Filter = "";
 		ShowOptions();
 	}
 	else
 	{
-		AskText(class'CheatUI_Commands'.static.GetParamLabel(Command, Args.Length), Param.Default, OnParamEntered, OnParamCancelled);
+		AskText(class'CommandsUI_Commands'.static.GetParamLabel(Command, Args.Length), Param.Default, OnParamEntered, OnParamCancelled);
 	}
 }
 
 simulated function ShowOptions()
 {
-	local CheatUI_Command Command;
-	local CheatUI_Option Option;
+	local CommandsUI_Command Command;
+	local CommandsUI_Option Option;
 	local int Total;
 
 	Command = GetCommand();
 	bPicking = true;
-	RowOptions = class'CheatUI_Commands'.static.GetOptions(Command.Params[Args.Length], Filter, Total);
+	RowOptions = class'CommandsUI_Commands'.static.GetOptions(Command.Params[Args.Length], Filter, Total);
 	List.ClearItems();
 	foreach RowOptions(Option)
 	{
 		AddRow(Option.Label, false);
 	}
-	Header.SetText(class'CheatUI_Commands'.static.GetLabel(Command), class'CheatUI_Commands'.static.GetParamLabel(Command, Args.Length));
+	Header.SetText(class'CommandsUI_Commands'.static.GetLabel(Command), class'CommandsUI_Commands'.static.GetParamLabel(Command, Args.Length));
 	SetStatus(Repl(Repl(strMatches, "%SHOWN", string(RowOptions.Length)), "%TOTAL", string(Total))
 		$ (Filter != "" ? "  [" $ Filter $ "]" : ""));
 	FilterButton.Show();
+	AdvancedButton.Hide();
 	BackButton.SetText(strBack);
 }
 
@@ -235,10 +268,16 @@ simulated function OnFilterCancelled(string Text)
 
 simulated function RunCommand()
 {
+	local CommandsUI_Command Command;
 	local string Line;
 
-	Line = class'CheatUI_Commands'.static.BuildCommandLine(GetCommand(), Args);
-	class'CheatUI_Commands'.static.Run(Line);
+	Command = GetCommand();
+	Line = class'CommandsUI_Commands'.static.BuildCommandLine(Command, Args);
+	class'CommandsUI_Commands'.static.Run(Line);
+	if (Command.Toggle != '')
+	{
+		class'CommandsUI_Settings'.static.SetToggleActive(Command.Toggle, class'CommandsUI_Commands'.static.GetToggleState(Command.Toggle));
+	}
 	`XSTRATEGYSOUNDMGR.PlaySoundEvent("Play_MenuSelect");
 	ShowCommands();
 	SetStatus(Repl(strRan, "%COMMAND", Line));

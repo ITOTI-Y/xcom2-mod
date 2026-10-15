@@ -2,13 +2,13 @@
 # requires-python = ">=3.12"
 # dependencies = ["typer>=0.24"]
 # ///
-"""Build CheatUI with the WOTC SDK and install it into the game.
+"""Build CommandsUI with the WOTC SDK and install it into the game.
 
 The mod uses Community Highlander functions, so the SDK compiles against the
 Highlander's XComGame sources, copied from its Workshop item over the SDK's own.
 The compiled script is also kept in `Script/`, where publish.py uploads it from.
 
-uv run CheatUI/build.py --sdk <SDK dir> --mods-dir <XComGame/Mods> --highlander <Highlander Workshop dir>
+uv run CommandsUI/build.py --sdk <SDK dir> --mods-dir <XComGame/Mods> --highlander <Highlander Workshop dir>
 """
 
 import shutil
@@ -19,7 +19,7 @@ from typing import Annotated, Final
 
 import typer
 
-MOD: Final = "CheatUI"
+MOD: Final = "CommandsUI"
 HERE: Final = Path(__file__).parent
 
 

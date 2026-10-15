@@ -8,7 +8,7 @@ Script mods for XCOM 2: War of the Chosen. Each mod lives in its own folder with
 |---|---|
 | [x2locWeaponCatNames](x2locWeaponCatNames) | Replaces the internal codes of mod weapon categories in the "valid weapons" line of ability descriptions with localized names |
 | [UniversalSoldierLW](UniversalSoldierLW) | Lets every new soldier choose specializations from the ability columns of all soldier classes, and buy stat upgrades with ability points |
-| [CheatUI](CheatUI) | Opens a menu of console commands with a hotkey, so commands run with a click instead of being typed |
+| [CommandsUI](CommandsUI) | Opens a menu of console commands with a hotkey, so commands run with a click instead of being typed |
 
 ## x2locWeaponCatNames
 
@@ -42,15 +42,18 @@ uv run UniversalSoldierLW/build.py --sdk <WOTC SDK> --mods-dir <XComGame/Mods> -
 
 The mod overrides Highlander hooks, so `build.py` first copies the Highlander's `Core`, `Engine`, and `XComGame` sources over the SDK's `Development/Src`. It also reads Ability To Slot Reassignment's config class, whose sources do not build with the current SDK, so a stand-in with the same declarations in `BuildStubs/` is compiled into the SDK first and left out of the mod. It then compiles and installs the mod as for x2locWeaponCatNames.
 
-## CheatUI
+## CommandsUI
 
-F10 opens a menu of the console commands that apply to the current layer, the Avenger or a mission, grouped by category; F10 again or Esc closes it. Choosing a command asks for its parameters in order: numbers and text in an input box, everything else from a list that can be filtered by name, such as resources, items, abilities, research, soldier classes, or soldiers. The menu then runs the command line as if it had been typed, and stays open. Retail builds create the cheat manager only with the `-allowconsole` launch option, so the menu creates it itself; a few commands still check the option, and the menu says when it is missing. It requires War of the Chosen and [X2WOTCCommunityHighlander](https://steamcommunity.com/sharedfiles/filedetails/?id=1134256495).
+F10 opens a menu of the console commands that apply to the current layer, the Avenger or a mission, grouped by category; F10 again or Esc closes it. Choosing a command asks for its parameters in order: numbers and text in an input box, everything else from a list that can be filtered by name, such as resources, items, abilities, research, soldier classes, or soldiers. The menu then runs the command line as if it had been typed, and stays open. Only the common commands are listed until **Show all** is clicked; the choice is remembered. Toggles such as unlimited actions show a checkbox with their current state, and the ones left on are turned on again at the start of each later mission until they are turned off. Retail builds create the cheat manager only with the `-allowconsole` launch option, so the menu creates it itself; a few commands still check the option, and the menu says when it is missing. It requires War of the Chosen and [X2WOTCCommunityHighlander](https://steamcommunity.com/sharedfiles/filedetails/?id=1134256495).
 
-`Config/XComCheatUI.ini` sets the hotkey and lists the commands. Each entry is a command line whose `%1`, `%2`, ... take its parameters, the layer it applies to, and the kind of each parameter; the labels are in `Localization/CheatUI.*`. The default list holds base game commands and LWOTC's `RespecSelectedSoldier`.
+`Config/XComCommandsUI.ini` sets the hotkey and lists the commands. Each entry is a command line whose `%1`, `%2`, ... take its parameters, the layer it applies to, the kind of each parameter, and optionally the mod that adds the command, whether it is advanced, and the toggle state it shows; the labels are in `Localization/CommandsUI.*`. The default list holds base game commands, plus the commands of LWOTC, [Additional Soldier Console Commands](https://steamcommunity.com/sharedfiles/filedetails/?id=1370543410), and [XpanD's Console Commands](https://steamcommunity.com/sharedfiles/filedetails/?id=3113132590), each listed only while its mod is active. The base game's mission win ends the mission as a win without completing its objectives; XpanD's command completes every objective first.
 
 ```bash
-uv run CheatUI/build.py --sdk <WOTC SDK> --mods-dir <XComGame/Mods> --highlander <Highlander Workshop directory>
+uv run CommandsUI/build.py --sdk <WOTC SDK> --mods-dir <XComGame/Mods> --highlander <Highlander Workshop directory>
+uv run CommandsUI/publish.py --steamcmd <steamcmd.exe> --username <Steam account>
 ```
+
+`publish.py` uploads it to the Steam Workshop as described for x2locWeaponCatNames.
 
 ## License
 

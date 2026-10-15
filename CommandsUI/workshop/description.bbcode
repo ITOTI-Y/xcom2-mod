@@ -1,0 +1,55 @@
+Press F10 to open a menu of console commands and run any of them with a click. The menu lists the commands that apply where you are, on the Avenger or in a mission, grouped by category. Choosing a command asks for its parameters in turn: numbers and text in an input box, and resources, items, abilities, research, soldier classes, or soldiers from a list that can be filtered by name. The menu then runs the command as if it had been typed into the console, and stays open for the next one.
+
+[h2]Features[/h2]
+[list]
+[*]Common commands only by default; [b]Show all[/b] adds the rest, and the choice is remembered.
+[*]Toggles such as unlimited actions, invincibility, always hit, and no fog of war show a checkbox with their current state. A toggle left on is turned on again at the start of each later mission, until it is turned off in the menu.
+[*]Two mission endings: [i]Complete all objectives and win[/i] completes every objective before the win; [i]End mission now[/i] ends the mission as a win without completing its objectives.
+[*]Commands from other mods appear only while those mods are active: LWOTC, [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1370543410]Additional Soldier Console Commands[/url], and [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3113132590]XpanD's Console Commands[/url]. Commands that act on one soldier use the soldier selected in the armory, or in a mission the active unit or the unit nearest the cursor.
+[*]English and Simplified Chinese.
+[/list]
+
+[h2]Requirements[/h2]
+[list]
+[*]War of the Chosen
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=1134256495]X2WOTCCommunityHighlander[/url]
+[/list]
+The [i]-allowconsole[/i] launch option is not needed for most commands, since the menu creates the game's cheat manager itself. A few commands still check the option, and the menu shows a notice when it is missing.
+
+[h2]Configuration[/h2]
+[i]Config/XComCommandsUI.ini[/i] sets the hotkey and lists the commands. Each entry gives a command line whose %1, %2, ... take its parameters, the layer it applies to, the kind of each parameter, and optionally the mod that provides it, whether it is advanced, and the toggle state it shows. New commands, including those of other console command mods, can be added there; their names go in [i]Localization/CommandsUI.*[/i].
+
+[h2]Compatibility[/h2]
+The mod stores nothing in saves and can be added or removed at any time. The menu settings and the toggles left on are kept in [i]XComCommandsUIState.ini[/i] in the game's user config folder. Commands change the campaign exactly as the console would, so saving before large changes is advisable.
+
+[h2]Source[/h2]
+The source code is in [i]CommandsUI[/i] of [url=https://github.com/ITOTI-Y/xcom2-mod]xcom2-mod[/url]; bug reports are welcome on its issue tracker.
+
+[hr][/hr]
+
+按 F10 打开控制台指令菜单，点击即可执行指令。菜单按类别列出当前场景（复仇者号或任务中）适用的指令。选择一条指令后，菜单依次询问它的参数：数字和文本在输入框中填写；资源、物品、技能、研究、兵种和士兵从可按名称筛选的列表中选择。随后菜单执行这条指令，效果与在控制台手动输入相同，菜单保持打开，便于继续执行下一条。
+
+[h2]功能[/h2]
+[list]
+[*]默认只列出常用指令，点击[b]显示全部[/b]后列出其余指令，该选择会被记住。
+[*]无限行动、无敌、必定命中、关闭战争迷雾等开关类指令带有勾选框，显示当前状态。保持开启的开关会在之后每场任务开始时自动重新开启，直到在菜单中关闭。
+[*]提供两种结束任务的方式：[i]完成全部目标并胜利[/i]先完成全部任务目标再判定胜利；[i]立即结束任务[/i]直接以胜利结束任务，不完成任务目标。
+[*]其他 mod 的指令只在对应 mod 启用时显示，包括 LWOTC、[url=https://steamcommunity.com/sharedfiles/filedetails/?id=1370543410]Additional Soldier Console Commands[/url] 和 [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3113132590]XpanD's Console Commands[/url]。作用于单个士兵的指令，在复仇者号上作用于军械库中选中的士兵，在任务中作用于当前单位或光标处的单位。
+[*]支持英文和简体中文。
+[/list]
+
+[h2]前置要求[/h2]
+[list]
+[*]天选者之战（War of the Chosen）
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=1134256495]X2WOTCCommunityHighlander[/url]
+[/list]
+菜单会自行创建游戏的作弊管理器，因此大多数指令无需 [i]-allowconsole[/i] 启动参数。少数指令仍会检查该参数，缺少时菜单顶部会给出提示。
+
+[h2]配置[/h2]
+快捷键和指令清单都在 [i]Config/XComCommandsUI.ini[/i] 中设置。每条指令写明命令行（%1、%2 等依次代入参数）、适用场景和每个参数的类型，还可以写明提供该指令的 mod、是否属于不常用指令，以及勾选框显示的开关状态。其他控制台指令 mod 的指令也可以加入该文件，显示名称写在 [i]Localization/CommandsUI.*[/i] 中。
+
+[h2]兼容性[/h2]
+本 mod 不向存档写入任何内容，可以随时添加或移除。菜单设置和保持开启的开关记录在游戏用户配置目录的 [i]XComCommandsUIState.ini[/i] 中。指令对战役的修改与控制台完全相同，执行影响较大的指令前建议先存档。
+
+[h2]源码[/h2]
+源码位于 [url=https://github.com/ITOTI-Y/xcom2-mod]xcom2-mod[/url] 仓库的 [i]CommandsUI[/i] 目录，问题反馈请提交到该仓库的 Issues。

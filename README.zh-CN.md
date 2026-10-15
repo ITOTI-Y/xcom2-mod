@@ -8,7 +8,7 @@
 |---|---|
 | [x2locWeaponCatNames](x2locWeaponCatNames) | 把技能说明“可用武器”一行中 mod 武器类别的内部代号替换为本地化名称 |
 | [UniversalSoldierLW](UniversalSoldierLW) | 新兵从所有兵种的技能列中自选专精，并可用能力点提升属性 |
-| [CheatUI](CheatUI) | 用快捷键打开控制台指令菜单，点击即可执行，无需手动输入 |
+| [CommandsUI](CommandsUI) | 用快捷键打开控制台指令菜单，点击即可执行，无需手动输入 |
 
 ## x2locWeaponCatNames
 
@@ -42,15 +42,18 @@ uv run UniversalSoldierLW/build.py --sdk <WOTC SDK> --mods-dir <XComGame/Mods> -
 
 本 mod 重写了 Highlander 的钩子，所以 `build.py` 会先把 Highlander 的 `Core`、`Engine` 和 `XComGame` 源码覆盖到 SDK 的 `Development/Src`。它还要读取 Ability To Slot Reassignment 的配置类，而该 mod 的源码无法用当前 SDK 编译，所以先把 `BuildStubs/` 中声明一致的替身类编译进 SDK，替身类不随 mod 发布。随后像 x2locWeaponCatNames 一样编译并安装。
 
-## CheatUI
+## CommandsUI
 
-按 F10 打开菜单，按类别列出当前场景（复仇者号或任务中）适用的控制台指令；再按 F10 或 Esc 关闭。选择一条指令后，菜单依次询问它的参数：数字和文本在输入框中填写，其余参数从可按名称筛选的列表中选择，例如资源、物品、技能、研究、兵种和士兵。随后菜单执行这条指令，效果与手动输入相同，菜单保持打开。正式版游戏只在使用 `-allowconsole` 启动参数时才创建作弊管理器，因此菜单会自行创建；少数指令仍会检查该参数，缺少时菜单顶部会给出提示。它需要天选者之战和 [X2WOTCCommunityHighlander](https://steamcommunity.com/sharedfiles/filedetails/?id=1134256495)。
+按 F10 打开菜单，按类别列出当前场景（复仇者号或任务中）适用的控制台指令；再按 F10 或 Esc 关闭。选择一条指令后，菜单依次询问它的参数：数字和文本在输入框中填写，其余参数从可按名称筛选的列表中选择，例如资源、物品、技能、研究、兵种和士兵。随后菜单执行这条指令，效果与手动输入相同，菜单保持打开。菜单默认只列出常用指令，点击“显示全部”后列出全部指令，该选择会被记住。无限行动等开关类指令带有勾选框，显示当前状态；保持开启的开关会在之后每场任务开始时自动重新开启，直到手动关闭。正式版游戏只在使用 `-allowconsole` 启动参数时才创建作弊管理器，因此菜单会自行创建；少数指令仍会检查该参数，缺少时菜单顶部会给出提示。它需要天选者之战和 [X2WOTCCommunityHighlander](https://steamcommunity.com/sharedfiles/filedetails/?id=1134256495)。
 
-快捷键和指令清单都在 `Config/XComCheatUI.ini` 中设置。每条指令写明命令行（`%1`、`%2` 等依次代入参数）、适用场景和每个参数的类型；显示名称在 `Localization/CheatUI.*` 中。默认清单包含原版指令和 LWOTC 的 `RespecSelectedSoldier`。
+快捷键和指令清单都在 `Config/XComCommandsUI.ini` 中设置。每条指令写明命令行（`%1`、`%2` 等依次代入参数）、适用场景和每个参数的类型，还可以写明提供该指令的 mod、是否属于不常用指令，以及勾选框显示的开关状态；显示名称在 `Localization/CommandsUI.*` 中。默认清单包含原版指令，以及 LWOTC、[Additional Soldier Console Commands](https://steamcommunity.com/sharedfiles/filedetails/?id=1370543410) 和 [XpanD's Console Commands](https://steamcommunity.com/sharedfiles/filedetails/?id=3113132590) 的指令，后三者只在对应 mod 启用时列出。原版的任务胜利指令直接以胜利结束任务，不完成任务目标；XpanD 的指令会先完成全部目标再判定胜利。
 
 ```bash
-uv run CheatUI/build.py --sdk <WOTC SDK> --mods-dir <XComGame/Mods> --highlander <Highlander 创意工坊目录>
+uv run CommandsUI/build.py --sdk <WOTC SDK> --mods-dir <XComGame/Mods> --highlander <Highlander 创意工坊目录>
+uv run CommandsUI/publish.py --steamcmd <steamcmd.exe> --username <Steam 账号>
 ```
+
+`publish.py` 把它上传到 Steam 创意工坊，用法与 x2locWeaponCatNames 相同。
 
 ## 许可证
 
