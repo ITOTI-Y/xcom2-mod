@@ -44,7 +44,7 @@ uv run UniversalSoldierLW/build.py --sdk <WOTC SDK> --mods-dir <XComGame/Mods> -
 
 ## CommandsUI
 
-按 F10 打开菜单，按类别列出当前场景（复仇者号或任务中）适用的控制台指令；再按 F10 或 Esc 关闭。选择一条指令后，菜单依次询问它的参数：数字和文本在输入框中填写，其余参数从可按名称筛选的列表中选择，例如资源、物品、技能、研究、兵种和士兵。随后菜单执行这条指令，效果与手动输入相同，菜单保持打开。菜单默认只列出常用指令，点击“显示全部”后列出全部指令，该选择会被记住。无限行动等开关类指令带有勾选框，显示当前状态；保持开启的开关会在之后每场任务开始时自动重新开启，直到手动关闭。正式版游戏只在使用 `-allowconsole` 启动参数时才创建作弊管理器，因此菜单会自行创建；少数指令仍会检查该参数，缺少时菜单顶部会给出提示。它需要天选者之战和 [X2WOTCCommunityHighlander](https://steamcommunity.com/sharedfiles/filedetails/?id=1134256495)。
+按 F10，或在 Esc 暂停菜单中点击“指令菜单”，打开菜单，按类别列出当前场景（复仇者号或任务中）适用的控制台指令；再按 F10 或 Esc 关闭。暂停菜单中的这一项插在“返回主菜单”之前，其他用同样方式往暂停菜单加项的 mod 不受影响；它只响应鼠标点击。选择一条指令后，菜单依次询问它的参数：数字和文本在输入框中填写，其余参数从可按名称筛选的列表中选择，例如资源、物品、技能、研究、兵种、士兵和地区，地区列表的第一项为全部地区。随后菜单执行这条指令，效果与手动输入相同，菜单保持打开。菜单默认只列出常用指令，点击“显示全部”后列出全部指令，该选择会被记住。无限行动等开关类指令带有勾选框，显示当前状态；保持开启的开关会在之后每场任务开始时自动重新开启，直到手动关闭。正式版游戏只在使用 `-allowconsole` 启动参数时才创建作弊管理器，因此菜单会自行创建；少数指令仍会检查该参数，缺少时菜单顶部会给出提示。它需要天选者之战和 [X2WOTCCommunityHighlander](https://steamcommunity.com/sharedfiles/filedetails/?id=1134256495)。
 
 快捷键和指令清单都在 `Config/XComCommandsUI.ini` 中设置。每条指令写明命令行（`%1`、`%2` 等依次代入参数）、适用场景和每个参数的类型，还可以写明提供该指令的 mod、是否属于不常用指令，以及勾选框显示的开关状态；显示名称在 `Localization/CommandsUI.*` 中。默认清单包含原版指令，以及 LWOTC、[Additional Soldier Console Commands](https://steamcommunity.com/sharedfiles/filedetails/?id=1370543410) 和 [XpanD's Console Commands](https://steamcommunity.com/sharedfiles/filedetails/?id=3113132590) 的指令，后三者只在对应 mod 启用时列出。原版的任务胜利指令直接以胜利结束任务，不完成任务目标；XpanD 的指令会先完成全部目标再判定胜利。
 

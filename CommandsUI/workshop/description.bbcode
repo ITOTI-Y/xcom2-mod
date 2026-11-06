@@ -1,4 +1,4 @@
-Press F10 to open a menu of console commands and run any of them with a click. The menu lists the commands that apply where you are, on the Avenger or in a mission, grouped by category. Choosing a command asks for its parameters in turn: numbers and text in an input box, and resources, items, abilities, research, soldier classes, or soldiers from a list that can be filtered by name. The menu then runs the command as if it had been typed into the console, and stays open for the next one.
+Press F10, or choose [b]Command menu[/b] in the pause menu, to open a menu of console commands and run any of them with a click. The menu lists the commands that apply where you are, on the Avenger or in a mission, grouped by category. Choosing a command asks for its parameters in turn: numbers and text in an input box, and resources, items, abilities, research, soldier classes, soldiers, or regions from a list that can be filtered by name. The menu then runs the command as if it had been typed into the console, and stays open for the next one.
 
 It suits testing during mod development, where an ability, item, or event can be tried in a few clicks, and getting past a mission or campaign situation that a bug or a mod conflict has left stuck.
 
@@ -8,6 +8,7 @@ It suits testing during mod development, where an ability, item, or event can be
 [*]Toggles such as unlimited actions, invincibility, always hit, and no fog of war show a checkbox with their current state. A toggle left on is turned on again at the start of each later mission, until it is turned off in the menu.
 [*]Two mission endings: [i]Complete all objectives and win[/i] completes every objective before the win; [i]End mission now[/i] ends the mission as a win without completing its objectives.
 [*]Commands from other mods appear only while those mods are active: LWOTC, [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1370543410]Additional Soldier Console Commands[/url], and [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3113132590]XpanD's Console Commands[/url]. Commands that act on one soldier use the soldier selected in the armory, or in a mission the active unit or the unit nearest the cursor.
+[*]Alien force level: with LWOTC, [i]Set force level[/i] sets it for one region or all of them, alongside alert level and vigilance; the base game's global force level is under [b]Show all[/b].
 [*]English and Simplified Chinese.
 [/list]
 
@@ -29,7 +30,7 @@ The source code is in [i]CommandsUI[/i] of [url=https://github.com/ITOTI-Y/xcom2
 
 [hr][/hr]
 
-按 F10 打开控制台指令菜单，点击即可执行指令。菜单按类别列出当前场景（复仇者号或任务中）适用的指令。选择一条指令后，菜单依次询问它的参数：数字和文本在输入框中填写；资源、物品、技能、研究、兵种和士兵从可按名称筛选的列表中选择。随后菜单执行这条指令，效果与在控制台手动输入相同，菜单保持打开，便于继续执行下一条。
+按 F10，或在 Esc 暂停菜单中选择[b]指令菜单[/b]，即可打开控制台指令菜单，点击即可执行指令。菜单按类别列出当前场景（复仇者号或任务中）适用的指令。选择一条指令后，菜单依次询问它的参数：数字和文本在输入框中填写；资源、物品、技能、研究、兵种、士兵和地区从可按名称筛选的列表中选择。随后菜单执行这条指令，效果与在控制台手动输入相同，菜单保持打开，便于继续执行下一条。
 
 它适合在 mod 开发时测试技能、物品或事件，几次点击即可完成验证；也适合在 bug 或 mod 冲突导致卡关时，跳过当前任务或越过卡住的战役进程。
 
@@ -39,6 +40,7 @@ The source code is in [i]CommandsUI[/i] of [url=https://github.com/ITOTI-Y/xcom2
 [*]无限行动、无敌、必定命中、关闭战争迷雾等开关类指令带有勾选框，显示当前状态。保持开启的开关会在之后每场任务开始时自动重新开启，直到在菜单中关闭。
 [*]提供两种结束任务的方式：[i]完成全部目标并胜利[/i]先完成全部任务目标再判定胜利；[i]立即结束任务[/i]直接以胜利结束任务，不完成任务目标。
 [*]其他 mod 的指令只在对应 mod 启用时显示，包括 LWOTC、[url=https://steamcommunity.com/sharedfiles/filedetails/?id=1370543410]Additional Soldier Console Commands[/url] 和 [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3113132590]XpanD's Console Commands[/url]。作用于单个士兵的指令，在复仇者号上作用于军械库中选中的士兵，在任务中作用于当前单位或光标处的单位。
+[*]外星势力等级：启用 LWOTC 时，[i]设置势力等级[/i]可以修改单个地区或全部地区的势力等级，警戒等级和警惕度也可以同样修改；原版的全局势力等级在[b]显示全部[/b]中。
 [*]支持英文和简体中文。
 [/list]
 

@@ -12,7 +12,8 @@
 class CommandsUI_Commands extends Object config(CommandsUI);
 
 // Kind is one of: Number, Text, Choice (from Choices), Item, Ability, Tech, Character,
-// SoldierClass (template names), Soldier (a soldier's full name).
+// SoldierClass (template names), Soldier (a soldier's full name), Region (a region's
+// template name, after an empty option that stands for every region).
 struct CommandsUI_Param
 {
 	var name Kind;
@@ -220,6 +221,9 @@ static function array<CommandsUI_Option> GetOptions(CommandsUI_Param Param, stri
 	case 'Soldier':
 		AddSoldierOptions(Options, Filter, Total);
 		break;
+	case 'Region':
+		AddRegionOptions(Options, Filter, Total);
+		break;
 	}
 	return Options;
 }
@@ -354,6 +358,20 @@ static function AddSoldierOptions(out array<CommandsUI_Option> Options, string F
 		Option.Value = Unit.GetFullName();
 		Option.Label = Unit.GetFullName() $ "  (" $ Unit.GetSoldierClassDisplayName() $ ")";
 		AddOption(Options, Option, Filter, Total);
+	}
+}
+
+static function AddRegionOptions(out array<CommandsUI_Option> Options, string Filter, out int Total)
+{
+	local XComGameState_WorldRegion Region;
+	local CommandsUI_Option Option;
+
+	Option.Value = "";
+	Option.Label = LocalizeOr("ChoiceLabels", "AllRegions", "All regions");
+	AddOption(Options, Option, Filter, Total);
+	foreach `XCOMHISTORY.IterateByClassType(class'XComGameState_WorldRegion', Region)
+	{
+		AddOption(Options, MakeTemplateOption(Region.GetMyTemplateName(), Region.GetMyTemplate().DisplayName), Filter, Total);
 	}
 }
 
